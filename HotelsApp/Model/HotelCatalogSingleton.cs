@@ -34,9 +34,27 @@ namespace HotelsApp.Model
             set { _hotels = value; }
         }
 
+
+        //public HotelCatalogSingleton()
+        //{
+        //    Hotels = new ObservableCollection<Hotel>(new PersistenceFacade().GetHotels());
+        //}
+
+
         public HotelCatalogSingleton()
         {
-            Hotels = new ObservableCollection<Hotel>(new PersistenceFacade().GetHotels());
+            InitCatalog();
+        }
+
+        private async void InitCatalog()
+        { 
+            Hotels = new ObservableCollection<Hotel>();
+            var hotelList = await new PersistenceFacadeAsync().GetHotelsAsync();
+            foreach (var hotel in hotelList)
+            {
+               Hotels.Add(hotel); 
+            }
+           
         }
 
     }

@@ -120,6 +120,7 @@
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\PersistenceFacade.cs" />
+    <Compile Include="Util\PersistenceFacadeAsync.cs" />
     <Compile Include="ViewModel\GetHotelRoomsHandler.cs" />
     <Compile Include="ViewModel\HotelViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

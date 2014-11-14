@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -12,19 +11,26 @@ using Newtonsoft.Json;
 
 namespace HotelsApp.Util
 {
-    class PersistenceFacade
+    class PersistenceFacadeAsync
     {
         const string ServerUrl = "http://localhost:30006";
         HttpClientHandler handler;
 
-        public PersistenceFacade()
+        public PersistenceFacadeAsync()
         {
             handler = new HttpClientHandler();
             handler.UseDefaultCredentials = true;
         }
 
-       
-        public List<Hotel> GetHotels()
+
+        public  IEnumerable<Hotel> GetHotels()
+        {
+            var task = GetHotelsAsync();
+            task.Wait();
+            return task.Result;
+        } 
+
+        public async Task<IEnumerable<Hotel>> GetHotelsAsync()
         {
             using (var client = new HttpClient(handler))
             {
@@ -33,12 +39,12 @@ namespace HotelsApp.Util
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 try
                 {
-                    var response = client.GetAsync("api/Hotels").Result;
+                    var response = await client.GetAsync("api/Hotels");
 
                     if (response.IsSuccessStatusCode)
                     {
-                        var hotelList = response.Content.ReadAsAsync<IEnumerable<Hotel>>().Result;
-                        return hotelList.ToList();
+                        var hotelList = await response.Content.ReadAsAsync<IEnumerable<Hotel>>();
+                        return hotelList;
                     }
 
                 }
@@ -78,9 +84,9 @@ namespace HotelsApp.Util
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 try
                 {
-                    //string postBody = JsonConvert.SerializeObject(hotel);
-                    //var response = client.PostAsync("api/Hotels",new StringContent(postBody, Encoding.UTF8, "application/json")).Result;
-                    var response = client.PostAsJsonAsync("api/hotels", hotel).Result;
+                    string postBody = JsonConvert.SerializeObject(hotel);
+
+                    var response = client.PostAsync("api/Hotels",new StringContent(postBody, Encoding.UTF8, "application/json")).Result;
                 }
                 catch (Exception ex)
                 {
