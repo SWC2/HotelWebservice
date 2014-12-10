@@ -8,6 +8,7 @@ using Windows.UI.Popups;
 using HotelsApp.Model;
 using HotelsApp.Util;
 using HotelsApp.ViewModel;
+using Newtonsoft.Json;
 
 namespace HotelsApp.Handler
 {
@@ -40,9 +41,11 @@ namespace HotelsApp.Handler
             }
             HotelViewModel.Name = "";
             HotelViewModel.Address = "";
-        }
+            //new PersistenceFacade().SerializeHotelsAsJsonFile(HotelViewModel.Hotels.Hotels);
+            //ObservableCollection<Hotel> newHotels = new PersistenceFacade().DeSerializeHotelsAsJsonFile().Result;
+         }
 
-        
+
         public async void DeleteHotel()
         {
 

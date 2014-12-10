@@ -14,6 +14,8 @@ namespace HotelsApp.Util
     class PersistenceFacadeAsync
     {
         const string ServerUrl = "http://localhost:30006";
+        const string LoginServerUrl = "http://localhost:55556";
+
         HttpClientHandler handler;
 
         public PersistenceFacadeAsync()
@@ -120,6 +122,34 @@ namespace HotelsApp.Util
                 }
                return null;
             }
+        }
+
+        public Login ValidateLogin(string username, string password)
+        {
+            using (var client = new HttpClient(handler))
+            {
+                client.BaseAddress = new Uri(LoginServerUrl);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
+                {
+                    string url = "api/Profiles/" + username + "/" + password;
+                    var response = client.GetAsync(url).Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var login = response.Content.ReadAsAsync<Login>().Result;
+                        return login;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    new MessageDialog(ex.Message).ShowAsync();
+                }
+                return null;
+            }
+
         }
     }
 }

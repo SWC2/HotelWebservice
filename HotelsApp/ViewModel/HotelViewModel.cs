@@ -12,7 +12,7 @@ using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using HotelsApp.Annotations;
 using HotelsApp.Common;
-using HotelsApp.DAO;
+
 using HotelsApp.Handler;
 using HotelsApp.Model; 
 using Windows.UI.Popups;

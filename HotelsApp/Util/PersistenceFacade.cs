@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.UI.Popups;
+using HotelsApp.Handler;
 using HotelsApp.Model;
 using Newtonsoft.Json;
 
@@ -15,6 +19,7 @@ namespace HotelsApp.Util
     class PersistenceFacade
     {
         const string ServerUrl = "http://localhost:30006";
+        const string LoginServerUrl = "http://localhost:55556";
         HttpClientHandler handler;
 
         public PersistenceFacade()
@@ -23,7 +28,35 @@ namespace HotelsApp.Util
             handler.UseDefaultCredentials = true;
         }
 
-       
+        public Login ValidateLogin(string username, string password)
+        {
+            using (var client = new HttpClient(handler))
+            {
+                client.BaseAddress = new Uri(LoginServerUrl);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                try
+                {
+                    string url = "api/Profiles/" + username + "/" + password;
+                    var response = client.GetAsync(url).Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var login = response.Content.ReadAsAsync<Login>().Result;
+                        return login;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    new MessageDialog(ex.Message).ShowAsync();
+                }
+                return null;
+            }
+            
+        }
+
+
         public List<Hotel> GetHotels()
         {
             using (var client = new HttpClient(handler))
@@ -64,8 +97,8 @@ namespace HotelsApp.Util
                 catch (Exception ex)
                 {
                     new MessageDialog(ex.Message).ShowAsync();
-                }          
-            }    
+                }
+            }
         }
 
         //Notice: Install the NuGet Packages: Json.Net from Newtonsoft
@@ -86,14 +119,33 @@ namespace HotelsApp.Util
                 {
                     new MessageDialog(ex.Message).ShowAsync();
                 }
-            
+
             }
-            
+
         }
-        
+
+        public async void SerializeHotelsAsJsonFile(ObservableCollection<Hotel> hotels)
+        {
+            string fileName = "HotelsAsJson.dat";
+            string HotelsJsonString = JsonConvert.SerializeObject(hotels);
+          
+            StorageFile localFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting); 
+            await FileIO.WriteTextAsync(localFile, HotelsJsonString);
+
+        }
+
+        public async Task<ObservableCollection<Hotel>> DeSerializeHotelsAsJsonFile()
+        {
+            string fileName = "HotelsAsJson.dat";        
+            StorageFile localFile = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
+            string HotelsJsonString = await FileIO.ReadTextAsync(localFile);
+            ObservableCollection<Hotel> hotels = (ObservableCollection<Hotel>)JsonConvert.DeserializeObject(HotelsJsonString, typeof(ObservableCollection<Hotel>));
+            return hotels;
+        }
+
         public List<HotelRoom> GetRooms(Hotel hotel)
         {
-           using (var client = new HttpClient(handler))
+            using (var client = new HttpClient(handler))
             {
                 client.BaseAddress = new Uri(ServerUrl);
                 client.DefaultRequestHeaders.Clear();
@@ -112,7 +164,7 @@ namespace HotelsApp.Util
                 {
                     new MessageDialog(ex.Message).ShowAsync();
                 }
-               return null;
+                return null;
             }
         }
     }

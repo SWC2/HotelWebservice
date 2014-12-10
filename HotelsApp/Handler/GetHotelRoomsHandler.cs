@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Popups;
 using HotelsApp.Model;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using HotelsApp.Util;
 
-namespace HotelsApp.ViewModel
+namespace HotelsApp.Handler
 {
     public class GetHotelRoomsHandler
     {

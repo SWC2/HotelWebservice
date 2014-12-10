@@ -1,5 +1,4 @@
 ﻿<Page
-    
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:HotelsApp.View"
@@ -7,63 +6,25 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ViewModel="using:HotelsApp.ViewModel"
-    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     x:Name="pageRoot"
     x:Class="HotelsApp.View.MainPage"
-    
     mc:Ignorable="d">
+
     <Page.Resources>
-        <DataTemplate x:Key="DataTemplate">
-            <Grid>
-                <StackPanel HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="150">
-                    <TextBlock TextWrapping="Wrap" Text="{Binding Name}" FontFamily="Global User Interface" FontSize="20" FontWeight="Bold"/>
-                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Address}" Width="100" FontFamily="Global User Interface"/>
-                </StackPanel>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Name="RoomDataTemplate">
-            <Grid>
-                <StackPanel HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="100" Orientation="Horizontal">
-                    <TextBlock TextWrapping="Wrap" Text="{Binding RoomNo}" Margin="0,0,5,0" FontSize="20"/>
-                    <TextBlock TextWrapping="Wrap" Text="{Binding Types}" Margin="0,0,5,0" FontSize="20"/>
-                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Price}" VerticalAlignment="Top" Margin="5,0" FontSize="20"/>
-                </StackPanel>
-
-            </Grid>
-        </DataTemplate>
+        <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
+        <x:String x:Key="AppName">Log In</x:String>
     </Page.Resources>
-    <Page.BottomAppBar>
-        <CommandBar>
-            <AppBarButton Icon="Edit" Label="Edit Hotel"/>
-            <AppBarButton x:Name="DeleteButton" Icon="Delete" Label="Delete Hotel">
-            	<Interactivity:Interaction.Behaviors>
-            		<Core:EventTriggerBehavior EventName="Click">
-                        <Core:InvokeCommandAction Command="{Binding DeleteHotelCommand}" />
-            		</Core:EventTriggerBehavior>
-            	</Interactivity:Interaction.Behaviors>
-            </AppBarButton>
-            <AppBarButton Icon="Add" Label="Add New Hotel">
-                <Interactivity:Interaction.Behaviors>
-                    <Core:EventTriggerBehavior EventName="Click">
-                        <Core:NavigateToPageAction TargetPage="HotelsApp.View.AddHotelPage" />
-                    </Core:EventTriggerBehavior>
-                </Interactivity:Interaction.Behaviors>
-            </AppBarButton>
-        </CommandBar>
-    </Page.BottomAppBar>
-
 
     <Page.DataContext>
-        <ViewModel:HotelViewModel/>
+        <ViewModel:LoginViewModel/>
     </Page.DataContext>
-
 
     <!--
         This grid acts as a root panel for the page that defines two rows:
         * Row 0 contains the back button and page title
         * Row 1 contains the rest of the page layout
     -->
-    <Grid x:Name="MainGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition/>
@@ -75,33 +36,7 @@
         </Grid.RowDefinitions>
 
         <!-- Back button and page title -->
-        <!--
-            TODO: Content should be placed within the following grid 
-                  to show details for the current item
-        -->
-        <Grid Grid.Row="1" x:Name="contentRegion">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                	<ColumnDefinition Width="120"/>
-                	<ColumnDefinition Width="350"/>
-                	<ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-            	<GridView x:Name="HotelGridView" HorizontalAlignment="Left" VerticalAlignment="Top" Width="1185"  ItemTemplate="{StaticResource DataTemplate}" Height="583" ItemsSource="{Binding Hotels.Hotels}" Margin="0,24,0,0" Grid.Column="1" Grid.ColumnSpan="2">
-            		<Interactivity:Interaction.Behaviors> 
-                        <Core:EventTriggerBehavior EventName="SelectionChanged">
-                        	<Core:InvokeCommandAction Command="{Binding SelectHotelCommand}" CommandParameter="{Binding ElementName=HotelGridView, Path=SelectedItem}"/>
-                        </Core:EventTriggerBehavior>
-            			<Core:EventTriggerBehavior EventName="SelectionChanged">
-            				<Core:InvokeCommandAction Command="{Binding GetHotelRoomCommand}" CommandParameter="{Binding SelectedItem, ElementName=HotelGridView}"/>                      
-            			</Core:EventTriggerBehavior>
-                       
-            		</Interactivity:Interaction.Behaviors>
-            	</GridView>
-            	<ListView HorizontalAlignment="Left" Height="356" VerticalAlignment="Top" Width="169" Grid.Column="2" Margin="95,75,0,0" ItemTemplate="{StaticResource RoomDataTemplate}" ItemsSource="{Binding Rooms}" Header="Rooms" FontSize="25"/>
-            </Grid>
-        </Grid>
-        <Grid Grid.Row="0" x:Name="headerRegion">
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="*"/>
@@ -112,9 +47,18 @@
 				AutomationProperties.Name="Back"
 				AutomationProperties.AutomationId="BackButton"
 				AutomationProperties.ItemType="Navigation Button"/>
-            <TextBlock x:Name="pageTitle" Text="Hotels" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
-				IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
-        </Grid>
+            <TextBlock x:Name="pageTitle" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+				IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40" FontFamily="Segoe UI">
+            	<Run Text="Login Page"/>
 
+            </TextBlock>
+        </Grid>
+        <TextBlock HorizontalAlignment="Left" Margin="119,66,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Username" VerticalAlignment="Top" FontSize="25"/>
+        <TextBox HorizontalAlignment="Left" Margin="255,64,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="186" Text="{Binding UserName, Mode=TwoWay}"/>
+        <TextBlock HorizontalAlignment="Left" Margin="119,126,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Password" VerticalAlignment="Top" FontSize="25"/>
+        <TextBox HorizontalAlignment="Left" Margin="255,124,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="186" Text="{Binding PassWord, Mode=TwoWay}"/>
+        <AppBarButton HorizontalAlignment="Left" Icon="Permissions" Label="Login" Margin="483,67,0,0" Grid.Row="1" VerticalAlignment="Top" FontFamily="Global User Interface" Click="AppBarButton_Click">
+            <ContentPresenter Height="100" Width="100"/>
+        </AppBarButton>
     </Grid>
 </Page>

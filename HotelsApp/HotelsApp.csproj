@@ -111,18 +111,20 @@
     <Compile Include="Common\RelayArgCommand.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
-    <Compile Include="DAO\HotelDao.cs" />
+    <Compile Include="Handler\GetHotelRoomsHandler.cs" />
     <Compile Include="Handler\HotelHandler.cs" />
+    <Compile Include="Handler\LoginHandler.cs" />
     <Compile Include="Model\Hotel.cs" />
     <Compile Include="Model\HotelCatalogSingleton.cs" />
     <Compile Include="Model\HotelRoom.cs" />
+    <Compile Include="Model\Login.cs" />
     <Compile Include="Model\Room.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\PersistenceFacade.cs" />
     <Compile Include="Util\PersistenceFacadeAsync.cs" />
-    <Compile Include="ViewModel\GetHotelRoomsHandler.cs" />
     <Compile Include="ViewModel\HotelViewModel.cs" />
+    <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\AddHotelPage.xaml.cs">
@@ -130,6 +132,9 @@
     </Compile>
     <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ViewHotelPage.xaml.cs">
+      <DependentUpon>ViewHotelPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -205,9 +210,16 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\ViewHotelPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\Dat\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
